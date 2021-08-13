@@ -2,38 +2,60 @@ import os
 import csv
 
 # identify file path
-csvpath = os.path.join(".", "Resources", "Election_data.csv")
+election = os.path.join("Resources", "Election_data.csv")
 
-# Open and read csv
-with open(csvpath) as csv_file:
-    # split by commas
-    csv_reader = csv.reader(csv_file, delimiter=",")
+count = {}
+total = 0
+percent = {}
+winner = 0
 
-    #skip header
-    header = next(csv_reader)
 
-    # define function and set sole parameter
-def Poll_Totals(Election_data):
-    #describe variables
-    Voter_ID = str(Election_data[0])
-    County = str(Election_data[1])
-    Candidate = str(Election_data[2])
+with open(election) as csv_file:
+    elect_reader = csv.reader(csv_file, delimiter=",")
 
+    header = next(elect_reader)
+
+    for row in elect_reader:
+        total += 1
+        if row[2] in count:
+            count[row[2]] += 1
+
+        else:
+            count[row[2]] = 1
+
+for candidate in count:
+    percent[candidate] = (count[candidate] / total) * 100
+
+    if count[candidate] > winner:
+        winner= count[candidate]
+        won = candidate
+
+output_path = os.path.join('Analysis', 'Election_Analysis.txt')
+
+with open(output_path, 'w', newline="") as txtfile:
+
+    txtfile.write(f'''
+        Election Results
+        -------------------------
+        Total Votes: {total}
+        -------------------------\n''')
+
+    print(f'''\nElection Results
+        -------------------------
+        Total Votes: {total}
+        -------------------------''')
+
+    for candidate, votes in count.items():
+        txtfile.write(f'{candidate}: {percent[candidate]:.3f}% ({votes})\n')
+        
+        print(f'''{candidate}: {percent[candidate]:.3f}% ({votes})''')
     
-    Total_Votes = len(Voter_ID)
+        txtfile.write(f'''-------------------------
+            Winner: {won}
+            -------------------------''')
+
+        print(f'''-------------------------
+         Winner: {won}
+            -------------------------''')
 
 
-
-
-
-
-
-
-
-
-
-
-
-    print("The total amount of votes is: " + Total_Votes)
-     ,  , UY
-     U
